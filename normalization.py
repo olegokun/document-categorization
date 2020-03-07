@@ -10,8 +10,12 @@ import nltk
 import string
 
 
-stopword_list = nltk.corpus.stopwords.words('english')
-pos_tag_list = ['JJ', 'JJS', 'NN', 'NNP', 'RB', 'RBR', 'RBS', 'VBG', 'VBN']
+stopword_list = nltk.corpus.stopwords.words('english') +\
+["name", "field", "str", "int", "xml", "type", "chapter", "import", "class",
+ "handler", "dir", "instance", "val", "figure", "size", "id", "doc", "total",
+ "new", "integer", "time", "wm", "true", "total", "curl", "product", 
+ "day", "country"]
+pos_tag_list = ['JJ', 'NN', 'NNP']
 
 
 def remove_noisy_tokens(text):

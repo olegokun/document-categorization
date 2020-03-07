@@ -25,10 +25,6 @@ from keyphrase_extraction import get_top_bigrams, get_top_trigrams
 from utils import build_feature_matrix
 
 
-#cur_dir = os.path.dirname(__file__)
-#db = os.path.join(cur_dir, 'summaries.sqlite')
-
-
 def get_filenames():
     '''
     Extract full names (path and name) of all PDF files under a given directory
@@ -97,14 +93,19 @@ def tika_parser(file_path):
     return text, corrupted_files
 
 
-def sqlite_entry(path, title, summary):
+def sqlite_entry(path, title, content):
+    '''
+    Write a generated summary, keyphrases, and the current time found in it to 
+    an sqlite database residing in the same directory where this script is
+    '''
+    
     conn = sqlite3.connect(path)
     c = conn.cursor()
-    c.execute("INSERT INTO summary_db (title, summary, date)"\
-    " VALUES (?, ?, DATETIME('now'))", (title, summary))
+    c.execute("INSERT INTO document_db (title, content, date)"\
+    " VALUES (?, ?, DATETIME('now'))", (title, content))
     conn.commit()
     conn.close()
-
+        
 
 def main():
     # Get a list of file names of all documents in a specified folder
@@ -128,9 +129,10 @@ def main():
             all_tokens = flattened_bigrams + " " + flattened_trigrams
             documents.append(all_tokens)
             # Keep only the file name without extension
-            titles.append(os.path.basename(fname).strip(".pdf"))
+            title = os.path.basename(fname).strip(".pdf")
+            titles.append(title)
             # Write a summary to a SQLite database
-            #sqlite_entry(db, title, summary)
+            sqlite_entry(db, title, all_tokens)
     
     vectorizer, feature_matrix = \
     build_feature_matrix(documents, feature_type='tfidf', 
@@ -142,20 +144,26 @@ def main():
     
     topn_features = int(os.getenv('FEATURE_NUMBER'))
     
+    matched = False
+    
     if os.getenv('CLUSTERING') == "affinity":
         from document_clustering import (affinity_propagation,
                                          cluster_analysis)
+        from topic_modeling import topic_extraction
         
         # Get clusters using affinity propagation
         ap_obj, clusters = affinity_propagation(feature_matrix=feature_matrix)
-        #print(ap_obj.labels_)
         
         cluster_analysis(ap_obj, feature_names, titles, clusters, 
                          topn_features, feature_matrix)
+        
+        topic_extraction(documents, ap_obj.labels_)
+        matched = True
     
     if os.getenv('CLUSTERING') == "kmeans":
         from document_clustering import (k_means, 
                                          cluster_analysis)
+        from topic_modeling import topic_extraction
         
         num_clusters = int(os.getenv('CLUSTER_NUMBER'))
         km_obj, clusters = k_means(feature_matrix=feature_matrix, 
@@ -163,6 +171,9 @@ def main():
         
         cluster_analysis(km_obj, feature_names, titles, clusters,
                          topn_features, feature_matrix)
+        
+        topic_extraction(documents, km_obj.labels_)
+        matched = True
         
     if os.getenv('CLUSTERING') == "hierarchical":
         from document_clustering import (ward_hierarchical_clustering, 
@@ -175,7 +186,17 @@ def main():
         plot_hierarchical_clusters(linkage_matrix=linkage_matrix,
                                    data=data,
                                    figure_size=(8,10))
+        matched = True
+    
+    if not matched:
+        raise ValueError("Unknown clustering algorithm!")
         
         
 if __name__ == '__main__':
+    cur_dir = os.path.dirname(__file__)
+    db = os.path.join(cur_dir, 'documents.sqlite')
+    conn = sqlite3.connect(db)
+    c = conn.cursor()
+    c.execute('CREATE TABLE document_db'\
+              ' (title TEXT, content TEXT, date TEXT)')
     main()

@@ -28,15 +28,16 @@ def centroids_dict(centroids, index):
 
 
 def generate_wordclouds(centroids):
-    wordcloud = WordCloud(max_font_size=100, background_color = 'white')
+    wordcloud = WordCloud(max_font_size=100, background_color = "white")
     for i in range(0, len(centroids)):
         centroid_dict = centroids_dict(centroids, i)
         wordcloud.generate_from_frequencies(centroid_dict)
         plt.figure()
-        plt.title('Cluster {}'.format(i))
+        plt.title("Cluster {}".format(i))
         plt.imshow(wordcloud)
         plt.axis("off")
         plt.show()
+        wordcloud.to_file("cluster_{}.png".format(i))
 
 
 def get_cluster_data(clustering_obj, data, feature_names, num_clusters,
@@ -127,7 +128,8 @@ def plot_clusters(num_clusters, feature_matrix,
     for index in range(len(cluster_plot_frame)):
         ax.text(cluster_plot_frame.iloc[index]['x'], 
                 cluster_plot_frame.iloc[index]['y'], 
-                cluster_plot_frame.iloc[index]['title'], size=8)  
+                cluster_plot_frame.iloc[index]['title'], size=8)
+    plt.savefig("clustering_results.png", dpi=300)
     # Show the plot           
     plt.show() 
 
