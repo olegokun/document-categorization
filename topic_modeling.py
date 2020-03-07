@@ -14,6 +14,10 @@ from sklearn.decomposition import (LatentDirichletAllocation, NMF)
 
 
 def get_topics_terms_weights(weights, feature_names):
+    '''
+    Compute a weight for each term in a topic
+    '''
+    
     feature_names = np.array(feature_names)
     sorted_indices = np.array([list(row[::-1]) 
                            for row 
@@ -37,6 +41,9 @@ def print_topics_udf(topics, total_topics=1,
                      weight_threshold=0.0001,
                      display_weights=False,
                      num_terms=None):
+    '''
+    Display terms for each topic
+    '''
     
     for index in range(total_topics):
         topic = topics[index]
@@ -58,7 +65,9 @@ def print_topics_udf(topics, total_topics=1,
 
 def topic_extraction(documents, labels):
     '''
+    Main function of topic modeling
     '''
+    
     num_clusters = len(set(labels))
     n_topics = int(os.getenv('TOPIC_NUMBER_PER_CLUSTER'))
     matched = False
@@ -72,6 +81,7 @@ def topic_extraction(documents, labels):
                                                         feature_type='tfidf') 
         feature_names = vectorizer.get_feature_names()
         if os.getenv('TOPIC_MODELING') == "lda":
+            # Use Latent Dirichlet Allocation for topic modeling
             lda = LatentDirichletAllocation(n_components=n_topics, 
                                             max_iter=1000,
                                             learning_method='online', 
@@ -82,6 +92,7 @@ def topic_extraction(documents, labels):
             matched = True
             
         if os.getenv('TOPIC_MODELING') == "nmf":
+            # Use Nonnegative Matrix Factorization for topic modeling
             nmf = NMF(n_components=n_topics, 
                       random_state=42, alpha=.1, l1_ratio=.5)
             nmf.fit(tfidf_matrix)      

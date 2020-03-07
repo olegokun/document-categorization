@@ -16,8 +16,13 @@ from collections import Counter
 from wordcloud import WordCloud
 
 
-# Transforms a centroids dataframe into a dictionary to be used on a WordCloud.
+# This and the next functions are adopted from
+# https://nbviewer.jupyter.org/github/LucasTurtle/national-anthems-clustering/blob/master/Cluster_Anthems.ipynb
 def centroids_dict(centroids, index):
+    '''
+    Transform a centroids Data Frame into a dictionary to be used on wordcloud
+    '''
+    
     a = centroids.T[index].sort_values(ascending = False).reset_index().values
     centroid_dict = dict()
 
@@ -28,6 +33,10 @@ def centroids_dict(centroids, index):
 
 
 def generate_wordclouds(centroids):
+    '''
+    Generate word cloud for each cluster, display and save it in a PNG file
+    '''
+    
     wordcloud = WordCloud(max_font_size=100, background_color = "white")
     for i in range(0, len(centroids)):
         centroid_dict = centroids_dict(centroids, i)
@@ -42,20 +51,26 @@ def generate_wordclouds(centroids):
 
 def get_cluster_data(clustering_obj, data, feature_names, num_clusters,
                      topn_features=10):
+    '''
+    Extract important information about each cluster:
+        - key words characterizing a cluster centroid
+        - documents assigned to a cluster
+    '''
 
     cluster_details = {} 
     # Get cluster centroids
     ordered_centroids = clustering_obj.cluster_centers_.argsort()[:, ::-1]
-    # Get key features (by TFIDF score) for each cluster
-    # Get documents belonging to each cluster
+    
     for cluster_num in range(num_clusters):
         cluster_details[cluster_num] = {}
         cluster_details[cluster_num]['cluster_num'] = cluster_num
+        # Get key features (by TFIDF score) for each cluster
         key_features = [feature_names[index] 
                         for index 
                         in ordered_centroids[cluster_num, :topn_features]]
         cluster_details[cluster_num]['key_features'] = key_features
         
+        # Get documents belonging to each cluster
         documents = data[data['Cluster'] == cluster_num]['Title'].values.tolist()
         cluster_details[cluster_num]['documents'] = documents
     
@@ -63,7 +78,10 @@ def get_cluster_data(clustering_obj, data, feature_names, num_clusters,
        
     
 def print_cluster_data(cluster_data):
-    # Print cluster details
+    '''
+    Print characteristics of each cluster
+    '''
+    
     for cluster_num, cluster_details in cluster_data.items():
         print('Cluster {} details:'.format(cluster_num))
         print('-'*50)
@@ -76,6 +94,11 @@ def print_cluster_data(cluster_data):
 def plot_clusters(num_clusters, feature_matrix,
                   cluster_data, data,
                   plot_size=(16,8)):
+    '''
+    Plot documents distributed iver clusters in a 2D space and save a resulting
+    plot in a PNG file
+    '''
+    
     # Generate random color for clusters                  
     def generate_random_color():
         color = '#%06x' % random.randint(0, 0xFFFFFF)
@@ -84,10 +107,10 @@ def plot_clusters(num_clusters, feature_matrix,
     markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', '*', 'h', 'H', 'D', 'd']
     # Build cosine distance matrix
     cosine_distance = 1 - cosine_similarity(feature_matrix) 
-    # Dimensionality reduction using MDS
+    # Do dimensionality reduction using MDS
     mds = MDS(n_components=2, dissimilarity="precomputed", 
               random_state=1)
-    # Get coordinates of clusters in new low-dimensional space
+    # Get coordinates of clusters in new 2D space
     plot_positions = mds.fit_transform(cosine_distance)  
     x_pos, y_pos = plot_positions[:, 0], plot_positions[:, 1]
     # Build cluster plotting data
@@ -97,7 +120,7 @@ def plot_clusters(num_clusters, feature_matrix,
         # Assign cluster features to unique label
         cluster_color_map[cluster_num] = generate_random_color()
         cluster_name_map[cluster_num] = ', '.join(cluster_details['key_features'][:5]).strip()
-    # Map each unique cluster label with its coordinates and movies
+    # Map each unique cluster label with its coordinates and list of documents
     cluster_plot_frame = pd.DataFrame({'x': x_pos,
                                        'y': y_pos,
                                        'label': data['Cluster'].values.tolist(),
@@ -107,7 +130,7 @@ def plot_clusters(num_clusters, feature_matrix,
     # Set plot figure size and axes
     fig, ax = plt.subplots(figsize=plot_size) 
     ax.margins(0.05)
-    # Plot each cluster using co-ordinates and movie titles
+    # Plot each cluster using co-ordinates and document titles
     for cluster_num, cluster_frame in grouped_plot_frame:
          marker = markers[cluster_num] if cluster_num < len(markers) \
                   else np.random.choice(markers, size=1)[0]
@@ -124,11 +147,12 @@ def plot_clusters(num_clusters, feature_matrix,
     fontP.set_size('small')    
     ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.01), fancybox=True, 
               shadow=True, ncol=5, numpoints=1, prop=fontP) 
-    # Add labels as the film titles
+    # Add labels as the document titles
     for index in range(len(cluster_plot_frame)):
         ax.text(cluster_plot_frame.iloc[index]['x'], 
                 cluster_plot_frame.iloc[index]['y'], 
                 cluster_plot_frame.iloc[index]['title'], size=8)
+    # Save the plot in a PNG file
     plt.savefig("clustering_results.png", dpi=300)
     # Show the plot           
     plt.show() 
@@ -137,6 +161,10 @@ def plot_clusters(num_clusters, feature_matrix,
 from sklearn.cluster import KMeans
 
 def k_means(feature_matrix, num_clusters=3):
+    '''
+    K-means clustering
+    '''
+    
     km = KMeans(n_clusters=num_clusters,
                 max_iter=10000)
     km.fit(feature_matrix)
@@ -147,6 +175,9 @@ def k_means(feature_matrix, num_clusters=3):
 from sklearn.cluster import AffinityPropagation
               
 def affinity_propagation(feature_matrix):
+    '''
+    Affinity propagation clustering
+    '''
     
     ap = AffinityPropagation()
     ap.fit(feature_matrix.todense())
@@ -157,6 +188,9 @@ def affinity_propagation(feature_matrix):
 from scipy.cluster.hierarchy import ward, dendrogram
 
 def ward_hierarchical_clustering(feature_matrix):
+    '''
+    Hierarchical clustering
+    '''
     
     cosine_distance = 1 - cosine_similarity(feature_matrix)
     linkage_matrix = ward(cosine_distance)
@@ -164,7 +198,10 @@ def ward_hierarchical_clustering(feature_matrix):
 
     
 def plot_hierarchical_clusters(linkage_matrix, data, figure_size=(8,12)):
-    # set size
+    '''
+    Plot a dengrogram for hierachical clusters
+    '''
+    
     fig, ax = plt.subplots(figsize=figure_size) 
     titles = data['Title'].values.tolist()
     # plot dendrogram
@@ -175,14 +212,21 @@ def plot_hierarchical_clusters(linkage_matrix, data, figure_size=(8,12)):
                     top='off',
                     labelbottom='off')
     plt.tight_layout()
+    # Save the dendrogram in a PNG file
     plt.savefig('ward_hierachical_clusters.png', dpi=300)
 
 
 def cluster_analysis(clustering_object, feature_names, titles, clusters,
                      topn_features, feature_matrix):
+    '''
+    Main function of cluster analysis
+    '''
     
+    # Get cluster centroids
     centroids = pd.DataFrame(clustering_object.cluster_centers_)
     centroids.columns = feature_names
+    
+    # Generate wordclouds for clusters
     generate_wordclouds(centroids)
             
     data = pd.DataFrame({'Title': titles, 'Cluster': clusters})

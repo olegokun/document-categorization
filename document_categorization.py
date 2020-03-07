@@ -69,6 +69,7 @@ def tika_parser(file_path):
     Parse a PDF file with tika and extract file content (text)
     '''
     
+    # List of files that tika cannot parse
     corrupted_files = []
     
     # Create a PDF object for a file
@@ -95,7 +96,7 @@ def tika_parser(file_path):
 
 def sqlite_entry(path, title, content):
     '''
-    Write a generated summary, keyphrases, and the current time found in it to 
+    Write a document title, document content, and the current time to 
     an sqlite database residing in the same directory where this script is
     '''
     
@@ -108,10 +109,14 @@ def sqlite_entry(path, title, content):
         
 
 def main():
+    '''
+    Main function of document categorization
+    '''
+    
     # Get a list of file names of all documents in a specified folder
     fnames = get_filenames()
     print("The total number of files: %g" % len(fnames))
-    #
+    
     titles = []
     documents = []
     for i, fname in enumerate(fnames):
@@ -119,21 +124,27 @@ def main():
         print("File no.%d %s is being priocessed ..." % (i, os.path.basename(fname)))
         text, corrupted_files = tika_parser(fname)
         if text:  # ignore corrupted files
-            # Pre-process the file content
+            # Extract sentences and pre-process the document content
             sentences = parse_document(text)
             norm_sentences = normalize_corpus(sentences)
+            # Extract top bi-grams and tri-grams and flatten both lists
             bigrams = get_top_bigrams(norm_sentences, top_n=int(os.getenv('TOP_N')))
             flattened_bigrams = ' '.join(' '.join(tokens) for tokens in bigrams)
             trigrams = get_top_trigrams(norm_sentences, top_n=int(os.getenv('TOP_N')))
             flattened_trigrams = ' '.join(' '.join(tokens) for tokens in trigrams)
+            # Combine bi-grams and tri-grams into a single list with individual 
+            # words as tokens
             all_tokens = flattened_bigrams + " " + flattened_trigrams
+            # Append this list as the new content describing the original document
             documents.append(all_tokens)
             # Keep only the file name without extension
             title = os.path.basename(fname).strip(".pdf")
+            # Append the document title
             titles.append(title)
-            # Write a summary to a SQLite database
+            # Write the document title and content to an SQLite database
             sqlite_entry(db, title, all_tokens)
     
+    # Extract features from documents
     vectorizer, feature_matrix = \
     build_feature_matrix(documents, feature_type='tfidf', 
                          min_df=0.0, max_df=1.0,
@@ -141,7 +152,7 @@ def main():
     print(feature_matrix.shape)
     # Get feature names
     feature_names = vectorizer.get_feature_names()
-    
+    # Get the number of top features describing each cluster centroid 
     topn_features = int(os.getenv('FEATURE_NUMBER'))
     
     matched = False
@@ -157,6 +168,7 @@ def main():
         cluster_analysis(ap_obj, feature_names, titles, clusters, 
                          topn_features, feature_matrix)
         
+        # Extract topics of each cluster 
         topic_extraction(documents, ap_obj.labels_)
         matched = True
     
@@ -165,6 +177,7 @@ def main():
                                          cluster_analysis)
         from topic_modeling import topic_extraction
         
+        # Get clusters using k-means
         num_clusters = int(os.getenv('CLUSTER_NUMBER'))
         km_obj, clusters = k_means(feature_matrix=feature_matrix, 
                                    num_clusters=num_clusters)
@@ -172,6 +185,7 @@ def main():
         cluster_analysis(km_obj, feature_names, titles, clusters,
                          topn_features, feature_matrix)
         
+        # Extract topics of each cluster
         topic_extraction(documents, km_obj.labels_)
         matched = True
         
@@ -193,6 +207,7 @@ def main():
         
         
 if __name__ == '__main__':
+    # Create an sqlite database and start processing
     cur_dir = os.path.dirname(__file__)
     db = os.path.join(cur_dir, 'documents.sqlite')
     conn = sqlite3.connect(db)

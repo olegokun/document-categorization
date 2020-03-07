@@ -9,6 +9,9 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 def build_feature_matrix(documents, feature_type='frequency',
                          ngram_range=(1, 1), min_df=0.0, max_df=1.0):
+    '''
+    Feature extraction
+    '''
 
     feature_type = feature_type.lower().strip()  
     

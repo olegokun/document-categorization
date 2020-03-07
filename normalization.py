@@ -10,15 +10,22 @@ import nltk
 import string
 
 
+# Stopwords and some tokens mostly coming from programming code within text
 stopword_list = nltk.corpus.stopwords.words('english') +\
 ["name", "field", "str", "int", "xml", "type", "chapter", "import", "class",
  "handler", "dir", "instance", "val", "figure", "size", "id", "doc", "total",
  "new", "integer", "time", "wm", "true", "total", "curl", "product", 
  "day", "country"]
+# Part-of-Speech (POS) to find in text
+# We are interested oly in certain adjectives and nouns
 pos_tag_list = ['JJ', 'NN', 'NNP']
 
 
 def remove_noisy_tokens(text):
+    '''
+    Remove tokens that are considered noisy for further analysis
+    '''
+    
     # Replaces the ASCII '�' symbol with '8'
     text = text.replace(u'\ufffd', '8')   
     # Removes all numbers and words including them. e.g., 'Year2000'
@@ -33,12 +40,20 @@ def remove_noisy_tokens(text):
     
     
 def tokenize_text(text):
+    '''
+    Tokenize text into words
+    '''
+    
     tokens = nltk.word_tokenize(text) 
     tokens = [token.strip() for token in tokens]
     return tokens
 
    
 def remove_special_characters(text):
+    '''
+    Remove any punctuation marks
+    '''
+    
     tokens = tokenize_text(text)
     pattern = re.compile('[{}]'.format(re.escape(string.punctuation)))
     filtered_tokens = filter(None, [pattern.sub(' ', token) for token in tokens])
@@ -47,6 +62,10 @@ def remove_special_characters(text):
     
     
 def remove_stopwords(text):
+    '''
+    Remove stopwords
+    '''
+    
     tokens = tokenize_text(text)
     filtered_tokens = [token for token in tokens if token not in stopword_list]
     filtered_text = ' '.join(filtered_tokens) 
@@ -54,6 +73,10 @@ def remove_stopwords(text):
 
 
 def remove_special_pos(text):
+    '''
+    Filter out redundant POS
+    '''
+    
     tokens = nltk.word_tokenize(text)
     filtered_tokens = [token for token,pos_tag in nltk.pos_tag(tokens) if pos_tag in pos_tag_list]
     filtered_text = ' '.join(filtered_tokens)    
@@ -61,6 +84,9 @@ def remove_special_pos(text):
 
 
 def normalize_corpus(corpus, tokenize=False):
+    '''
+    Main function combining all text pre-processing steps
+    '''
     
     normalized_corpus = []
     
@@ -80,6 +106,10 @@ def normalize_corpus(corpus, tokenize=False):
 
 
 def parse_document(document):
+    '''
+    Tokenize a document into a list of sentences
+    '''
+    
     document = re.sub('\n', ' ', document)
     if isinstance(document, str):
         document = document
