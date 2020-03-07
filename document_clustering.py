@@ -10,8 +10,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.manifold import MDS
 from sklearn.metrics.pairwise import cosine_similarity
-import random
+import random, os
 from matplotlib.font_manager import FontProperties
+from collections import Counter
 from wordcloud import WordCloud
 
 
@@ -173,3 +174,36 @@ def plot_hierarchical_clusters(linkage_matrix, data, figure_size=(8,12)):
                     labelbottom='off')
     plt.tight_layout()
     plt.savefig('ward_hierachical_clusters.png', dpi=300)
+
+
+def cluster_analysis(clustering_object, feature_names, titles, clusters,
+                     topn_features, feature_matrix):
+    
+    centroids = pd.DataFrame(clustering_object.cluster_centers_)
+    centroids.columns = feature_names
+    generate_wordclouds(centroids)
+            
+    data = pd.DataFrame({'Title': titles, 'Cluster': clusters})
+    # Get the total number of documents per cluster
+    c = Counter(clusters)   
+    print(c.items())
+    if os.getenv('CLUSTERING') == "affinity":
+        # Get the total number of clusters
+        num_clusters = len(c)
+    if os.getenv('CLUSTERING') == "kmeans":
+        num_clusters = int(os.getenv('CLUSTER_NUMBER'))
+    print('The number of clusters:', num_clusters)
+    
+    cluster_data = get_cluster_data(clustering_obj=clustering_object,
+                                    data=data,
+                                    feature_names=feature_names,
+                                    num_clusters=num_clusters,
+                                    topn_features=topn_features)         
+
+    print_cluster_data(cluster_data) 
+
+    plot_clusters(num_clusters=num_clusters, 
+                  feature_matrix=feature_matrix,
+                  cluster_data=cluster_data, 
+                  data=data,
+                  plot_size=(16,8)) 

@@ -23,7 +23,7 @@ load_dotenv(dotenv_path=env_path)
 from normalization import parse_document, normalize_corpus
 from keyphrase_extraction import get_top_bigrams, get_top_trigrams
 from utils import build_feature_matrix
-from collections import Counter
+
 
 #cur_dir = os.path.dirname(__file__)
 #db = os.path.join(cur_dir, 'summaries.sqlite')
@@ -143,75 +143,27 @@ def main():
     topn_features = int(os.getenv('FEATURE_NUMBER'))
     
     if os.getenv('CLUSTERING') == "affinity":
-        from document_clustering import affinity_propagation
-        from document_clustering import (generate_wordclouds,
-                                         get_cluster_data, 
-                                         print_cluster_data, 
-                                         plot_clusters)
+        from document_clustering import (affinity_propagation,
+                                         cluster_analysis)
         
         # Get clusters using affinity propagation
         ap_obj, clusters = affinity_propagation(feature_matrix=feature_matrix)
+        #print(ap_obj.labels_)
         
-        centroids = pd.DataFrame(ap_obj.cluster_centers_)
-        centroids.columns = feature_names
-        generate_wordclouds(centroids)
-                
-        data = pd.DataFrame({'Title': titles, 'Cluster': clusters})
-        # Get the total number of documents per cluster
-        c = Counter(clusters)   
-        print(c.items())  
-        # Get the total number of clusters
-        total_clusters = len(c)
-        print('Total number of clusters:', total_clusters)
-        
-        cluster_data = get_cluster_data(clustering_obj=ap_obj,
-                                        data=data,
-                                        feature_names=feature_names,
-                                        num_clusters=total_clusters,
-                                        topn_features=topn_features)         
-
-        print_cluster_data(cluster_data) 
-
-        plot_clusters(num_clusters=total_clusters, 
-                      feature_matrix=feature_matrix,
-                      cluster_data=cluster_data, 
-                      data=data,
-                      plot_size=(16,8)) 
+        cluster_analysis(ap_obj, feature_names, titles, clusters, 
+                         topn_features, feature_matrix)
     
     if os.getenv('CLUSTERING') == "kmeans":
-        from document_clustering import k_means
-        from document_clustering import (generate_wordclouds,
-                                         get_cluster_data, 
-                                         print_cluster_data, 
-                                         plot_clusters)
+        from document_clustering import (k_means, 
+                                         cluster_analysis)
         
         num_clusters = int(os.getenv('CLUSTER_NUMBER'))
         km_obj, clusters = k_means(feature_matrix=feature_matrix, 
                                    num_clusters=num_clusters)
         
-        centroids = pd.DataFrame(km_obj.cluster_centers_)
-        centroids.columns = feature_names
-        generate_wordclouds(centroids)
+        cluster_analysis(km_obj, feature_names, titles, clusters,
+                         topn_features, feature_matrix)
         
-        data = pd.DataFrame({'Title': titles, 'Cluster': clusters})
-        # Get the total number of documents per cluster
-        c = Counter(clusters)   
-        print(c.items())
-        
-        cluster_data = get_cluster_data(clustering_obj=km_obj,
-                                        data=data,
-                                        feature_names=feature_names,
-                                        num_clusters=num_clusters,
-                                        topn_features=topn_features)         
-
-        print_cluster_data(cluster_data) 
-        
-        plot_clusters(num_clusters=num_clusters, 
-                      feature_matrix=feature_matrix,
-                      cluster_data=cluster_data, 
-                      data=data,
-                      plot_size=(16,8))
-    
     if os.getenv('CLUSTERING') == "hierarchical":
         from document_clustering import (ward_hierarchical_clustering, 
                                          plot_hierarchical_clusters)
@@ -223,7 +175,7 @@ def main():
         plot_hierarchical_clusters(linkage_matrix=linkage_matrix,
                                    data=data,
                                    figure_size=(8,10))
-
+        
         
 if __name__ == '__main__':
     main()
