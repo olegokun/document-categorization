@@ -21,16 +21,15 @@ Text filtering -> Document clustering -> Topic modeling
 ## Results
 There are three clustering methods ([affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation), [k-means](https://en.wikipedia.org/wiki/K-means_clustering) and [Ward hierarchical clustering](https://en.wikipedia.org/wiki/Ward%27s_method)) and two topic modeling methods ([Latent Dirichlet Allocation or LDA](https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation) and [Nonnegative Matrix Factorization or NMF](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization)).
 
-[Affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation) does not require to pre-specify the number of clusters to be found in advance, unlike [k-means](https://en.wikipedia.org/wiki/K-means_clustering). Although [Ward hierarchical clustering](https://en.wikipedia.org/wiki/Ward%27s_method) also does not need to know that number in advance, this clustering method requires a human to judge on the final number of clusters from a dendrogram, i.e., clutering partitioning is rather subjective. Having decided on this number, a user can then supply it to [k-means](https://en.wikipedia.org/wiki/K-means_clustering). The dendrogram for my set of 21 books is shown below.
+[Affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation) does not require to pre-specify the number of clusters to be found in advance, unlike [k-means](https://en.wikipedia.org/wiki/K-means_clustering). Although [Ward hierarchical clustering](https://en.wikipedia.org/wiki/Ward%27s_method) also does not need to know that number in advance, this clustering method requires a human to judge on the final number of clusters from a dendrogram, i.e., clustering partitioning is rather subjective. Having decided on this number, a user can then supply it to [k-means](https://en.wikipedia.org/wiki/K-means_clustering). The dendrogram for my set of 21 books is shown below.
 
 ![dendrogram](https://github.com/olegokun/document-categorization/blob/master/ward_hierachical_clusters.png)
 
+One could observe 3 clusters presented by red, green and light blue lines. One cluster includes all books about Deep Learning, another one about Apache Spark, and the third one about search engines/platforms (Elasticsearch and Solr). 
 
+Given these considerations, I decided to go with [affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation), as it is rearly that the number of clustes is known beforehand. All results below are obtained with this clustering method.
 
-
-Given these considerations, I decided to go with [affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation), as it is rearly that the number of clustes is known beforehand. 
-
-Word clouds for each of the xtracted clusters are given below.
+Word clouds for each of the extracted clusters are given below.
 
 ![Wordcloud for Cluster_0](https://github.com/olegokun/document-categorization/blob/master/cluster_0.png)
 
