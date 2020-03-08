@@ -8,7 +8,7 @@ The goal of this project was to automatically organize my large collection of e-
 More description will be added soon!
 
 ## Data
-As an example, I used 21 e-books from my personal collection. Here is their list:
+As an example, I used 21 e-books from my personal collection (due to the copyrights I cannot upload these books here). Here is their list:
 * Advanced Deep Learning with Keras
 * Advanced Deep Learning with Python
 * etc.
@@ -44,7 +44,7 @@ Word clouds for each of the extracted clusters are given below.
 
 ![Affinity propagation results](https://github.com/olegokun/document-categorization/blob/master/clustering_results.png)
 
-
+A book title and its content from extracted top bigrams and trigrams are written to an SQLite database (file *documents.sqlite*). However, there is a check preventing any book to be written more than once in order to avoid duplicated records and unnecessary database growth.
 
 ## Potential future improvements
 I observed that tokens from a programming code sometimes polluted clusters. This happened because many of my books contain a lot of code snippets and text pre-processing, despite being rigorous, was unable to clean up these artifacts. One potential solution of this problem could be paragraph extraction, e.g., based on some heuristics such as blank lines between paragraphs, followed by paragraph classification into code and plain text. Naturally, the latter would require a one-class or binary classifier trained on examples of code in several popular programming languages and, if a binary classifier is used, plain text. The goal is to filter out paragraphs (almost) entirely consisting of code, while leaving paragraphs with a minor fraction of code untouched as few instances of code in the whole large book would unlikely result in the high [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) score and hence, such "noisy" tokens won't do much harm to document clustering.
