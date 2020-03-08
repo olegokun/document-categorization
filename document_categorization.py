@@ -99,13 +99,19 @@ def sqlite_entry(path, title, content):
     Write a document title, document content, and the current time to 
     an sqlite database residing in the same directory where this script is
     '''
-    
+
     conn = sqlite3.connect(path)
     c = conn.cursor()
-    c.execute("INSERT INTO document_db (title, content, date)"\
-    " VALUES (?, ?, DATETIME('now'))", (title, content))
+    # Check if a title is in the database
+    # If yes, then don't write a duplicate
+    c.execute("SELECT COUNT(*), "\
+              "SUM(CASE WHEN title=? THEN 1 ELSE 0 END) AS sum FROM document_db", 
+              [title])
+    row_count, n_records = c.fetchone()
+    if not row_count or not n_records:
+        c.execute("INSERT INTO document_db (title, content, date)"\
+                  " VALUES (?, ?, DATETIME('now'))", (title, content))
     conn.commit()
-    conn.close()
         
 
 def main():
@@ -207,11 +213,16 @@ def main():
         
         
 if __name__ == '__main__':
-    # Create an sqlite database and start processing
+    # Create an sqlite database  if it does not exists and start processing
     cur_dir = os.path.dirname(__file__)
     db = os.path.join(cur_dir, 'documents.sqlite')
-    conn = sqlite3.connect(db)
-    c = conn.cursor()
-    c.execute('CREATE TABLE document_db'\
-              ' (title TEXT, content TEXT, date TEXT)')
+    if not os.path.exists(db):
+        conn = sqlite3.connect(db)
+        c = conn.cursor()
+        c.execute('CREATE TABLE document_db'\
+                  ' (title TEXT, content TEXT, date TEXT)')
     main()
+    try:
+        conn.close()
+    except NameError:
+        pass
