@@ -2,7 +2,7 @@
 # Document Categorization
 Automatic partitioning the collection of my e-books into categories and labeling each category according to its content
 
-## Problem formulation: Unsupervised document clustering
+## Problem formulation: Unsupervised document clustering + topic modeling
 The goal of this project was to automatically organize my large collection of e-books in the PDF format into groups or clusters so that I could easily find sources of useful information when needed. However, the code in this repo could be handful for the general purpose where there are many PDF files that one wants to split into groups where each group contains books or documents on a similar subject/topic. In machine learning terms, such a task is named document categorization and it is completely **unsupervised**.
 
 More description will be added soon!
@@ -19,6 +19,9 @@ These books could roughly be divided into 3-4 clusters.
 Text filtering -> Document clustering -> Topic modeling
 
 ## Results
+There are three clustering methods ([affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation), [k-means](https://en.wikipedia.org/wiki/K-means_clustering) and [Ward hierarchical clustering](https://en.wikipedia.org/wiki/Ward%27s_method)) and two topic modeling methods ([Latent Dirichlet Allocation or LDA](https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation) and [Nonnegative Matrix Factorization or NMF](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization))
+
+Word clouds for 
 ![Wordcloud for Cluster_0](https://github.com/olegokun/document-categorization/blob/master/cluster_0.png)
 
 ![Wordcloud for Cluster_1](https://github.com/olegokun/document-categorization/blob/master/cluster_1.png)
