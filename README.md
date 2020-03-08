@@ -20,8 +20,11 @@ Text filtering -> Document clustering -> Topic modeling
 
 ## Results
 ![Wordcloud for Cluster_0](https://github.com/olegokun/document-categorization/blob/master/cluster_0.png)
+
 ![Wordcloud for Cluster_1](https://github.com/olegokun/document-categorization/blob/master/cluster_1.png)
+
 ![Wordcloud for Cluster_2](https://github.com/olegokun/document-categorization/blob/master/cluster_2.png)
+
 ![Wordcloud for Cluster_3](https://github.com/olegokun/document-categorization/blob/master/cluster_3.png)
 
 
