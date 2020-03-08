@@ -27,6 +27,8 @@ Text filtering -> Document clustering -> Topic modeling
 
 ![Wordcloud for Cluster_3](https://github.com/olegokun/document-categorization/blob/master/cluster_3.png)
 
+![Affinity propagation results](https://github.com/olegokun/document-categorization/blob/master/clustering_results.png)
+
 
 ![Dendrogram](https://github.com/olegokun/document-categorization/blob/master/ward_hierachical_clusters.png)
 
