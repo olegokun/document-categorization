@@ -19,7 +19,11 @@ These books could roughly be divided into 3-4 clusters.
 Text filtering -> Document clustering -> Topic modeling
 
 ## Results
-![Cluster_0]()
+![Wordcloud for Cluster_0](https://github.com/olegokun/document-categorization/blob/master/cluster_0.png)
+![Wordcloud for Cluster_1](https://github.com/olegokun/document-categorization/blob/master/cluster_1.png)
+![Wordcloud for Cluster_2](https://github.com/olegokun/document-categorization/blob/master/cluster_2.png)
+![Wordcloud for Cluster_3](https://github.com/olegokun/document-categorization/blob/master/cluster_3.png)
+
 
 ![Dendrogram](https://github.com/olegokun/document-categorization/blob/master/ward_hierachical_clusters.png)
 
