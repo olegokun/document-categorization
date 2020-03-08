@@ -1,7 +1,7 @@
 # Document Categorization
  Automatic partitioning the collection of my e-books into categories and labeling each category according to its content
 
-The goal of this project was to automatically organize my large collection of e-books in the PDF format into groups or clusters so that I could easily find sources of useful information when needed. However, the code in this repo could be handful for the general purpose where there are many PDF files that one wants to split into groups where each group contains books or documents on similar subject/topic. In machine learning terms, such a task is named document categorization.
+The goal of this project was to automatically organize my large collection of e-books in the PDF format into groups or clusters so that I could easily find sources of useful information when needed. However, the code in this repo could be handful for the general purpose where there are many PDF files that one wants to split into groups where each group contains books or documents on a similar subject/topic. In machine learning terms, such a task is named document categorization and it is completely unsupervised.
 
 Description will be added soon!
 ## Data
