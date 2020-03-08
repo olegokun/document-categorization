@@ -15,6 +15,9 @@ As an example, I used 21 e-books from my personal collection. Here is their list
 
 These books could roughly be divided into 3-4 clusters.
 
+## Processing pipeline
+Text filtering -> Document clusteing -> Topic modeling
+
 ## Results
 
 ## Potential future improvements
