@@ -16,9 +16,10 @@ As an example, I used 21 e-books from my personal collection. Here is their list
 These books could roughly be divided into 3-4 clusters.
 
 ## Processing pipeline
-Text filtering -> Document clusteing -> Topic modeling
+Text filtering -> Document clustering -> Topic modeling
 
 ## Results
+![Dendrogram]()
 
 ## Potential future improvements
 I observed that tokens from a programming code sometimes polluted clusters. This happened because many of my books contain a lot of code snippets and text pre-processing, despite being rigorous, was unable to clean up these artifacts. One potential solution of this problem could be paragraph extraction, e.g., based on some heuristics such as blank lines between paragraphs, followed by paragraph classification into code and plain text. Naturally, the latter would require a one-class or binary classifier trained on examples of code in several popular programming languages and, if a binary classifier is used, plain text. The goal is to filter out paragraphs (almost) entirely consisting of code, while leaving paragraphs with a minor fraction of code untouched as few instances of code in the whole large book would unlikely result in the high [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) score and hence, such "noisy" tokens won't do much harm to document clustering.
