@@ -19,6 +19,8 @@ These books could roughly be divided into 3-4 clusters.
 Text filtering -> Document clustering -> Topic modeling
 
 ## Results
+![Cluster_0]()
+
 ![Dendrogram](https://github.com/olegokun/document-categorization/blob/master/ward_hierachical_clusters.png)
 
 ## Potential future improvements
