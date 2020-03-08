@@ -30,7 +30,7 @@ There are three clustering methods ([affinity propagation](https://en.wikipedia.
 
 One could observe 3 clusters presented by red, green and light blue lines. One cluster includes all books about Deep Learning, another one about Apache Spark, and the third one about search engines/platforms (Elasticsearch and Solr). 
 
-Given these considerations, I decided to go with [affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation), as it is rearly that the number of clustes is known beforehand. All results below are obtained with this clustering method.
+Given these considerations, I decided to go with [affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation), as it is rearly that the number of clusters is known beforehand. All results below are obtained with this clustering method.
 
 Word clouds for each of the extracted clusters are given below.
 
