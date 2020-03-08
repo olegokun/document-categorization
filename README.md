@@ -15,6 +15,9 @@ As an example, I used 21 e-books from my personal collection. Here is their list
 
 These books could roughly be divided into 3-4 clusters.
 
+## Running code
+The main file with all necessary code to execute in your favorite IDE or from the command line is located in *document_categorization.py*. The file *categorization.env* is the evironment fikle where all important parameters, such as clustering method or the number of topics per cluster, can be set up.
+
 ## Processing pipeline
 Text filtering -> Document clustering -> Topic modeling
 
