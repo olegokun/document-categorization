@@ -76,15 +76,15 @@ Word clouds for each of the extracted clusters are given below.
 
 ![Wordcloud for Cluster_3](https://github.com/olegokun/document-categorization/blob/master/cluster_3.png)
 
-One can see that Cluster 0 is about Apache Spark, Cluster 1 about Solr, Cluster 2 about Deep Learning, and Cluster 3 about Elasticsearch.
+One can see that Cluster 0 is about [Apache Spark](https://en.wikipedia.org/wiki/Apache_Spark), Cluster 1 about [Solr](https://en.wikipedia.org/wiki/Apache_Solr), Cluster 2 about [Deep Learning](https://en.wikipedia.org/wiki/Deep_learning), and Cluster 3 about [Elasticsearch](https://en.wikipedia.org/wiki/Elasticsearch).
 
-Visualization of the clustered 21 books in 2D space is shown below, which confirms the picture represented by word clouds.
+Visualization of the clustered 21 books in 2D space is shown below, which confirms the cluster partitioning picture represented by word clouds.
 
 ![Affinity propagation results](https://github.com/olegokun/document-categorization/blob/master/clustering_results.png)
 
 Here are results showing top words describing each cluster's centroid, the books assigned to a given cluster and the top topics characterizing that cluster:
 
-###Cluster 0 details:
+### Cluster 0 details:
 
 Key features: ['spark', 'machine', 'regression', 'logger', 'error', 'apache', 'program', 'sparksession', 'feature', 'mllib']
 
@@ -93,7 +93,7 @@ Documents in this cluster: A-Gentle-Introduction-to-Apache-Spark, Advanced_Analy
 Topic #1 with weights
 [('spark', 3.22), ('apache', 1.56), ('machine', 1.38), ('network', 1.37), ('system', 1.37), ('neural', 1.36), ('screenshot', 1.32), ('scala', 1.31), ('sum', 1.31), ('model', 1.31)]
 
-###Cluster 1 details:
+### Cluster 1 details:
 
 Key features: ['solr', 'query', 'facet', 'cache', 'parser', 'filter', 'content', 'index', 'folder', 'extraction']
 
@@ -102,7 +102,7 @@ Documents in this cluster: Apache_Solr_Essentials, Apache_Solr_High_Performance
 Topic #1 with weights
 [('solr', 1.9), ('query', 1.69), ('index', 1.45), ('search', 1.26), ('apache', 1.25), ('parser', 1.24), ('performance', 1.24), ('filter', 1.22), ('result', 1.22), ('response', 1.22)]
 
-###Cluster 2 details:
+### Cluster 2 details:
 
 Key features: ['loss', 'accuracy', 'train', 'tensorflow', 'model', 'automl', 'tf', 'relu', 'encoder', 'activation']
 
@@ -111,7 +111,7 @@ Documents in this cluster: Advanced Deep Learning with Keras, Advanced Deep Lear
 Topic #1 with weights
 [('model', 2.17), ('loss', 1.95), ('iot', 1.74), ('train', 1.68), ('deep', 1.61), ('tf', 1.6), ('okun', 1.56), ('neural', 1.53), ('image', 1.51), ('input', 1.49)]
 
-###Cluster 3 details:
+### Cluster 3 details:
 
 Key features: ['elasticsearch', 'query', 'index', 'score', 'node', 'search', 'title', 'match', 'logstash', 'twitter']
 
