@@ -5,15 +5,13 @@ Automatic partitioning the collection of my e-books into categories and labeling
 ## Problem formulation: Unsupervised document clustering + topic modeling
 The goal of this project was to automatically organize my large collection of e-books in the PDF format into groups or clusters so that I could easily find sources of useful information when needed. However, the code in this repo could be handful for the general purpose where there are many PDF files that one wants to split into groups where each group contains books or documents on a similar subject/topic. In machine learning terms, such a task is named document categorization and it is completely **unsupervised**.
 
-More description will be added soon!
-
 ## Data
-As an example, I used 21 e-books from my personal collection (due to the copyrights I cannot upload these books here). Here is their list:
+As an example, I used 21 e-books from my personal collection (due to the copyright restrictions I cannot upload these books here). Here is their list:
 * Advanced Deep Learning with Keras
 * Advanced Deep Learning with Python
 * etc.
 
-These books could roughly be divided into 3-4 clusters.
+These books could roughly be divided into 3-4 clusters: "Spark", "Deep Learning", "Elasticsearch/Solr". I intentionally selected books so that there would be no (significant) overlap in their topics.
 
 ## Running code
 The main file with all necessary code to execute in your favorite IDE or from the command line is *document_categorization.py*. The file *categorization.env* is the environment file where all important parameters, such as clustering method or the number of topics per cluster, are set up. 
