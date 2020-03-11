@@ -76,7 +76,13 @@ Word clouds for each of the extracted clusters are given below.
 
 ![Wordcloud for Cluster_3](https://github.com/olegokun/document-categorization/blob/master/cluster_3.png)
 
+One can see that Cluster 0 is about Apache Spark, Cluster 1 about Solr, Cluster 2 about Deep Learning, and Cluster 3 about Elasticsearch.
+
+Visualization of the clustered 21 books in 2D space is shown below, which confirms the picture represented by word clouds.
+
 ![Affinity propagation results](https://github.com/olegokun/document-categorization/blob/master/clustering_results.png)
+
+Here are results showing top words describing each cluster's centroid, the books assigned to a given cluster and the top topics characterizing that cluster:
 
 ###Cluster 0 details:
 --------------------------------------------------
