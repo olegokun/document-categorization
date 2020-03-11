@@ -78,43 +78,39 @@ Word clouds for each of the extracted clusters are given below.
 
 ![Affinity propagation results](https://github.com/olegokun/document-categorization/blob/master/clustering_results.png)
 
-Cluster 0 details:
+###Cluster 0 details:
 --------------------------------------------------
 Key features: ['spark', 'machine', 'regression', 'logger', 'error', 'apache', 'program', 'sparksession', 'feature', 'mllib']
 Documents in this cluster:
 A-Gentle-Introduction-to-Apache-Spark, Advanced_Analytics_with_Spark, Apache Spark 2.x Machine Learning Cookbook, Apache Spark 2.x for Java Developers, Apache Spark Deep Learning Cookbook
 
-Cluster 1 details:
+Topic #1 with weights
+[('spark', 3.22), ('apache', 1.56), ('machine', 1.38), ('network', 1.37), ('system', 1.37), ('neural', 1.36), ('screenshot', 1.32), ('scala', 1.31), ('sum', 1.31), ('model', 1.31)]
+
+###Cluster 1 details:
 --------------------------------------------------
 Key features: ['solr', 'query', 'facet', 'cache', 'parser', 'filter', 'content', 'index', 'folder', 'extraction']
 Documents in this cluster:
 Apache_Solr_Essentials, Apache_Solr_High_Performance
 
-Cluster 2 details:
+Topic #1 with weights
+[('solr', 1.9), ('query', 1.69), ('index', 1.45), ('search', 1.26), ('apache', 1.25), ('parser', 1.24), ('performance', 1.24), ('filter', 1.22), ('result', 1.22), ('response', 1.22)]
+
+###Cluster 2 details:
 --------------------------------------------------
 Key features: ['loss', 'accuracy', 'train', 'tensorflow', 'model', 'automl', 'tf', 'relu', 'encoder', 'activation']
 Documents in this cluster:
 Advanced Deep Learning with Keras, Advanced Deep Learning with Python, Deep Learning with TensorFlow 2 and Keras - Second Edition, Deep_Learning_for_Search, Deep_Learning_with_JavaScript, Hands-On Deep Learning for IoT
 
-Cluster 3 details:
+Topic #1 with weights
+[('model', 2.17), ('loss', 1.95), ('iot', 1.74), ('train', 1.68), ('deep', 1.61), ('tf', 1.6), ('okun', 1.56), ('neural', 1.53), ('image', 1.51), ('input', 1.49)]
+
+###Cluster 3 details:
 --------------------------------------------------
 Key features: ['elasticsearch', 'query', 'index', 'score', 'node', 'search', 'title', 'match', 'logstash', 'twitter']
 Documents in this cluster:
 Advanced Elasticsearch 7.0, Elasticsearch 5.x Cookbook - Third Edition, Elasticsearch 7 Quick Start Guide, Elasticsearch A Complete Guide, Elasticsearch_for_Hadoo, Learning Elastic Stack 6.0, Learning Elasticsearch, Mastering ElasticSearch
 
-Cluster #0:
-Topic #1 with weights
-[('spark', 3.22), ('apache', 1.56), ('machine', 1.38), ('network', 1.37), ('system', 1.37), ('neural', 1.36), ('screenshot', 1.32), ('scala', 1.31), ('sum', 1.31), ('model', 1.31)]
-
-Cluster #1:
-Topic #1 with weights
-[('solr', 1.9), ('query', 1.69), ('index', 1.45), ('search', 1.26), ('apache', 1.25), ('parser', 1.24), ('performance', 1.24), ('filter', 1.22), ('result', 1.22), ('response', 1.22)]
-
-Cluster #2:
-Topic #1 with weights
-[('model', 2.17), ('loss', 1.95), ('iot', 1.74), ('train', 1.68), ('deep', 1.61), ('tf', 1.6), ('okun', 1.56), ('neural', 1.53), ('image', 1.51), ('input', 1.49)]
-
-Cluster #3:
 Topic #1 with weights
 [('index', 2.96), ('elasticsearch', 2.48), ('query', 2.47), ('aggregation', 1.92), ('elastic', 1.65), ('es', 1.59), ('score', 1.55), ('search', 1.55), ('level', 1.54), ('hadoop', 1.53)]
 
