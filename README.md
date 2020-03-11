@@ -7,11 +7,29 @@ The goal of this project was to automatically organize my large collection of e-
 
 ## Data
 As an example, I used 21 e-books from my personal collection (due to the copyright restrictions I cannot upload these books here). Here is their list:
+* A-Gentle-Introduction-to-Apache-Spark
 * Advanced Deep Learning with Keras
 * Advanced Deep Learning with Python
-* etc.
+* Advanced Elasticsearch 7.0
+* Advanced_Analytics_with_Spark
+* Apache Spark 2.x Machine Learning Cookbook
+* Apache Spark 2.x for Java Developer
+* Apache Spark Deep Learning Cookbook
+* Apache_Solr_Essentials
+* Apache_Solr_High_Performance
+* Deep Learning with TensorFlow 2 and Keras - Second Edition
+* Deep_Learning_for_Search
+* Deep_Learning_with_JavaScript
+* Elasticsearch 5.x Cookbook - Third Edition
+* Elasticsearch 7 Quick Start Guide
+* Elasticsearch A Complete Guide
+* Elasticsearch_for_Hadoop
+* Hands-On Deep Learning for IoT
+* Learning Elastic Stack 6.0
+* Learning Elasticsearch
+* Mastering ElasticSearch
 
-These books could roughly be divided into 3-4 clusters: "Spark", "Deep Learning", "Elasticsearch/Solr". I intentionally selected books so that there would be no (significant) overlap in their topics.
+These books could roughly be divided into 3-4 clusters: "Spark", "Deep Learning", "Elasticsearch/Solr". I intentionally selected such books so that there would be no (significant) overlap in their topics.
 
 ## Running code
 The main file with all necessary code to execute in your favorite IDE or from the command line is *document_categorization.py*. The file *categorization.env* is the environment file where all important parameters, such as clustering method or the number of topics per cluster, are set up as follows:
