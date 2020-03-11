@@ -53,7 +53,17 @@ TOPIC_NUMBER_PER_CLUSTER=1
 I used a lot of code from the great book ["Text Analytics with Python: A Practical Real-World Approach to Gaining Actionable Insights from Your Data"](https://www.apress.com/gp/book/9781484223888), written by *Dipanjan Sarkar* and published by Apress in 2016. My role was to write so called integration code linking together different parts of the processing pipeline described in the next section. Whenever the code has been adopted, I preserved the original file and function names given by Dipanjan Sarkar. I also adopted two functions related to word cloud generation from the Jupyter notebook (https://nbviewer.jupyter.org/github/LucasTurtle/national-anthems-clustering/blob/master/Cluster_Anthems.ipynb) created by *Lucas de Sá*.
 
 ## Processing pipeline
-Text filtering -> Document clustering -> Topic modeling
+The application seeks for PDF files in a specified folder and extract text (as one long string) from each of them by using the tika parser. Once this is done, text is split into sentences and text pre-processing starts, which includes text filtering (removal of email addresses and web links, tokens with mixed letters and numbers, punctuation symbols, stopwords, tokens from code snippets embedded into text, and certain parts-of-speech), converting all words to the lower case, and sentence tokenization into words.
+
+I have noticed that code snippets embedded into text could harm document clustering by showing up in large numbers among top words characterizing cluster centroids. Currently, I adopted a rather straightforward solution to manually create the so called "black list" of such words that if met in text are removed from further analysis. However, this is clearly a sub-optimal solution that needs to be replaced with an automatic one (see the last section for details). 
+
+I also assumed that not all parts-of-speech (POS) are useful for representing the book content. I opted to preserve only three POS: singular adjective (JJ tag), singular nouns (NN tag) and singular proper nouns (NNP tag). All other POS are filtered out.
+
+Once each document is normalized, top N bigrams and top N trigrams are extracted from the remaining adjectives and nouns. Lists of bigrams and trigrams are flattened out afterwards and concatenated into a single list without removing duplicated words.
+
+A book title and its content from extracted top bigrams and trigrams are written to an SQLite database (file *documents.sqlite*). However, there is a check preventing any book to be written more than once in order to avoid duplicated records and unnecessary database growth.
+
+Next feature extraction is performed where [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) features form a feature matrix that is given as input to the pre-specified clustering function, followed by selected topic modeling.
 
 ## Results
 There are three clustering methods ([affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation), [k-means](https://en.wikipedia.org/wiki/K-means_clustering) and [Ward's hierarchical clustering](https://en.wikipedia.org/wiki/Ward%27s_method)) and two topic modeling methods ([Latent Dirichlet Allocation or LDA](https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation) and [Nonnegative Matrix Factorization or NMF](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization)).
@@ -121,8 +131,6 @@ Topic #1 with weights
 ('index', 2.96), ('elasticsearch', 2.48), ('query', 2.47), ('aggregation', 1.92), ('elastic', 1.65), ('es', 1.59), ('score', 1.55), ('search', 1.55), ('level', 1.54), ('hadoop', 1.53)
 
 Both words describing centroids and topics are sufficiently well describing the essense of each cluster.
-
-A book title and its content from extracted top bigrams and trigrams are written to an SQLite database (file *documents.sqlite*). However, there is a check preventing any book to be written more than once in order to avoid duplicated records and unnecessary database growth.
 
 ## Potential future improvements
 I observed that tokens from a programming code sometimes polluted clusters. This happened because many of my books contain a lot of code snippets and text pre-processing, despite being rigorous, was unable to clean up these artifacts. One potential solution of this problem could be paragraph extraction, e.g., based on some heuristics such as blank lines between paragraphs, followed by paragraph classification into code and plain text. Naturally, the latter would require a one-class or binary classifier trained on examples of code in several popular programming languages and, if a binary classifier is used, plain text. The goal is to filter out paragraphs (almost) entirely consisting of code, while leaving paragraphs with a minor fraction of code untouched as few instances of code in the whole large book would unlikely result in the high [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) score and hence, such "noisy" tokens won't do much harm to document clustering.
