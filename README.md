@@ -51,6 +51,8 @@ FEATURE_NUMBER=10
 TOPIC_MODELING="lda"
 # The number of topics per cluster
 TOPIC_NUMBER_PER_CLUSTER=1
+# File name to save a vectorizer object
+VECTORIZER_PKL_FILENAME="vectorizer_pickle_model.pkl"
 # File name to save a clustering model object
 CLUSTERING_PKL_FILENAME="clustering_pickle_model.pkl"
 # File name to save a topic modeling model object
