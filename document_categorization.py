@@ -156,6 +156,13 @@ def main():
     build_feature_matrix(documents, feature_type='tfidf', 
                          min_df=0.0, max_df=1.0,
                          ngram_range=(1, 1))
+    # Notice that 'feature_matrix' is normalized so that no extra normalization 
+    # is required
+    
+    # Save vectorizer in a file in the current folder
+    with open(os.getenv('VECTORIZER_PKL_FILENAME'), 'wb') as file:
+        pickle.dump(vectorizer, file)
+        
     print(feature_matrix.shape)
     # Get feature names
     feature_names = vectorizer.get_feature_names()
