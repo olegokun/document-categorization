@@ -39,17 +39,24 @@ The main file with all necessary code to execute in your favorite IDE or from th
 BOOK_PATH="C:/eBooks/A"
 # The number of top bigrams/trigrams to select
 TOP_N=100
-# Clustering algorithm (valid values are "affinity", "kmeans", "hierarchical")
+# Clustering algorithm 
+# (valid values are "affinity", "kmeans", "hierarchical")
 CLUSTERING="affinity"
 # The number of clusters to detect (only for CLUSTERING="kmeans")
 CLUSTER_NUMBER=3
 # The number of features to describe each cluster
 FEATURE_NUMBER=10
-# Topic modeling algorithm # (valid values are "lda", "nmf")
+# Topic modeling algorithm
+# (valid values are "lda", "nmf")
 TOPIC_MODELING="lda"
 # The number of topics per cluster
 TOPIC_NUMBER_PER_CLUSTER=1
+# File name to save a clustering model object
+CLUSTERING_PKL_FILENAME="clustering_pickle_model.pkl"
+# File name to save a topic modeling model object
+TOPIC_MODELING_PKL_FILENAME="topic_modeling_pickle_model.pkl"
 ```
+
 I used a lot of code from the great book ["Text Analytics with Python: A Practical Real-World Approach to Gaining Actionable Insights from Your Data"](https://www.apress.com/gp/book/9781484223888), written by *Dipanjan Sarkar* and published by Apress in 2016. My role was to write so called integration code linking together different parts of the processing pipeline described in the next section. Whenever the code has been adopted, I preserved the original file and function names given by Dipanjan Sarkar. I also adopted two functions related to word cloud generation from the Jupyter notebook (https://nbviewer.jupyter.org/github/LucasTurtle/national-anthems-clustering/blob/master/Cluster_Anthems.ipynb) created by *Lucas de Sá*.
 
 ## Processing pipeline
@@ -64,6 +71,8 @@ Once each document is normalized, top N bigrams and top N trigrams are extracted
 A book title and its content from extracted top bigrams and trigrams are written to an SQLite database (file *documents.sqlite*). However, there is a check preventing any book to be written more than once in order to avoid duplicated records and unnecessary database growth.
 
 Next feature extraction is performed where [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) features form a feature matrix that is given as input to the pre-specified clustering function, followed by selected topic modeling.
+
+A clustering model object and topic modeling model objects (one per cluster) are saved to files in the current folder. The topic modeling model objects are stored in a list of objects.
 
 ## Results
 There are three clustering methods ([affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation), [k-means](https://en.wikipedia.org/wiki/K-means_clustering) and [Ward's hierarchical clustering](https://en.wikipedia.org/wiki/Ward%27s_method)) and two topic modeling methods ([Latent Dirichlet Allocation or LDA](https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation) and [Nonnegative Matrix Factorization or NMF](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization)).
