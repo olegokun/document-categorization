@@ -72,7 +72,7 @@ A book title and its content from extracted top bigrams and trigrams are written
 
 Next feature extraction is performed where [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) features form a feature matrix that is given as input to the pre-specified clustering function, followed by selected topic modeling.
 
-A clustering model object and topic modeling model objects (one per cluster) are saved to files in the current folder. The topic modeling model objects are stored in a list of objects.
+A TF-IDF vectorizer object, a clustering model object and topic modeling model objects (one per cluster) are saved to files in the current folder. The topic modeling model objects are stored in a list of objects.
 
 ## Results
 There are three clustering methods ([affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation), [k-means](https://en.wikipedia.org/wiki/K-means_clustering) and [Ward's hierarchical clustering](https://en.wikipedia.org/wiki/Ward%27s_method)) and two topic modeling methods ([Latent Dirichlet Allocation or LDA](https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation) and [Nonnegative Matrix Factorization or NMF](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization)).
