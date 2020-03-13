@@ -71,6 +71,7 @@ def topic_extraction(documents, labels):
     num_clusters = len(set(labels))
     n_topics = int(os.getenv('TOPIC_NUMBER_PER_CLUSTER'))
     matched = False
+    tm_obj = []
     for c in range(num_clusters):
         print("="*70)
         print("Cluster #{}:".format(c))
@@ -90,6 +91,7 @@ def topic_extraction(documents, labels):
             lda.fit(tfidf_matrix)
             weights = lda.components_
             matched = True
+            tm_obj.append(lda)
             
         if os.getenv('TOPIC_MODELING') == "nmf":
             # Use Nonnegative Matrix Factorization for topic modeling
@@ -98,6 +100,7 @@ def topic_extraction(documents, labels):
             nmf.fit(tfidf_matrix)      
             weights = nmf.components_
             matched = True
+            tm_obj.append(nmf)
         
         if not matched:
             raise ValueError("Unknown topic modeling algorithm!")
@@ -107,6 +110,8 @@ def topic_extraction(documents, labels):
                          total_topics=n_topics,
                          num_terms=10,
                          display_weights=True)
+        
+    return tm_obj
 
         
         

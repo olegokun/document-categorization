@@ -23,6 +23,7 @@ load_dotenv(dotenv_path=env_path)
 from normalization import parse_document, normalize_corpus
 from keyphrase_extraction import get_top_bigrams, get_top_trigrams
 from utils import build_feature_matrix
+import pickle
 
 
 def get_filenames():
@@ -31,6 +32,19 @@ def get_filenames():
     '''
     
     allPdfFiles = glob.glob(os.getenv("BOOK_PATH") + "/*.pdf")
+    
+#    # Add some files manually as they are located in sub-directories
+#    extraFileNames = ["\\Better Deep Learning/better_deep_learning.pdf",
+#                     "\\Deep Learning for Computer Vision/deep_learning_for_computer_vision.pdf",
+#                     "\\Deep Learning for NLP/deep_learning_for_nlp.pdf",
+#                     "\\Deep Learning for Time Series Forecasting/deep_learning_time_series_forecasting.pdf",
+#                     "\\Deep Learning with Python/deep_learning_with_python.pdf",
+#                     "\\Introduction to Time Series Forecasting with Python/time_series_forecasting_with_python.pdf",
+#                     "\\Long Short-Term Memory Networks with Python/long_short_term_memory_networks_with_python.pdf",
+#                     "\\Generative Adversarial Networks with Python/generative_adversarial_networks.pdf",
+#                     "\\Imbalanced Classification with Python/imbalanced_classification_with_python.pdf"]
+#    # Combine two list of names
+#    allPdfFiles.extend([os.getenv("BOOK_PATH") + fileName for fileName in extraFileNames])
     
     # For each file, extract filename while ignoring its extension 
     files = [re.split(".pdf", file)[0] for file in allPdfFiles]
@@ -157,12 +171,14 @@ def main():
         
         # Get clusters using affinity propagation
         ap_obj, clusters = affinity_propagation(feature_matrix=feature_matrix)
+        cl_obj = ap_obj
         
         cluster_analysis(ap_obj, feature_names, titles, clusters, 
                          topn_features, feature_matrix)
         
         # Extract topics of each cluster 
-        topic_extraction(documents, ap_obj.labels_)
+        tm_obj = topic_extraction(documents, ap_obj.labels_)
+        
         matched = True
     
     if os.getenv('CLUSTERING') == "kmeans":
@@ -174,12 +190,13 @@ def main():
         num_clusters = int(os.getenv('CLUSTER_NUMBER'))
         km_obj, clusters = k_means(feature_matrix=feature_matrix, 
                                    num_clusters=num_clusters)
+        cl_obj = km_obj
         
         cluster_analysis(km_obj, feature_names, titles, clusters,
                          topn_features, feature_matrix)
         
         # Extract topics of each cluster
-        topic_extraction(documents, km_obj.labels_)
+        tm_obj = topic_extraction(documents, km_obj.labels_)
         matched = True
         
     if os.getenv('CLUSTERING') == "hierarchical":
@@ -197,6 +214,12 @@ def main():
     
     if not matched:
         raise ValueError("Unknown clustering algorithm!")
+        
+    # Save clustering and topic modeling objects in files in the current folder
+    with open(os.getenv('CLUSTERING_PKL_FILENAME'), 'wb') as file:
+        pickle.dump(cl_obj, file)
+    with open(os.getenv('TOPIC_MODELING_PKL_FILENAME'), 'wb') as file:
+        pickle.dump(tm_obj, file)
         
         
 if __name__ == '__main__':
