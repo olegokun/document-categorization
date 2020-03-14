@@ -10,19 +10,14 @@ import os
 import glob
 import pandas as pd
 import re
-import tika
-# Unfortunately, the latest tika versions result in errors when parsing PDF
-# files. Hence, the need for the older reliable version
-if tika.__version__ != "1.19":
-    raise Exception("Tika version must be 1.19!")
-from tika import parser
+from tika_parser import tika_parser
 from dotenv import load_dotenv
 from pathlib import Path
 env_path = Path('.')/'categorization.env'
 load_dotenv(dotenv_path=env_path)
-from normalization import parse_document, normalize_corpus
-from keyphrase_extraction import get_top_bigrams, get_top_trigrams
+from normalization import preprocess_text
 from utils import build_feature_matrix
+from database_management import sqlite_entry
 import pickle
 
 
@@ -32,6 +27,19 @@ def get_filenames():
     '''
     
     allPdfFiles = glob.glob(os.getenv("BOOK_PATH") + "/*.pdf")
+    
+#    # Add some files manually as they are located in sub-directories
+#    extraFileNames = ["\\Better Deep Learning/better_deep_learning.pdf",
+#                     "\\Deep Learning for Computer Vision/deep_learning_for_computer_vision.pdf",
+#                     "\\Deep Learning for NLP/deep_learning_for_nlp.pdf",
+#                     "\\Deep Learning for Time Series Forecasting/deep_learning_time_series_forecasting.pdf",
+#                     "\\Deep Learning with Python/deep_learning_with_python.pdf",
+#                     "\\Introduction to Time Series Forecasting with Python/time_series_forecasting_with_python.pdf",
+#                     "\\Long Short-Term Memory Networks with Python/long_short_term_memory_networks_with_python.pdf",
+#                     "\\Generative Adversarial Networks with Python/generative_adversarial_networks.pdf",
+#                     "\\Imbalanced Classification with Python/imbalanced_classification_with_python.pdf"]
+#    # Combine two list of names
+#    allPdfFiles.extend([os.getenv("BOOK_PATH") + fileName for fileName in extraFileNames])
     
     # For each file, extract filename while ignoring its extension 
     files = [re.split(".pdf", file)[0] for file in allPdfFiles]
@@ -52,56 +60,6 @@ def get_filenames():
     return allPdfFiles
 
 
-def tika_parser(file_path):
-    '''
-    Parse a PDF file with tika and extract file content (text)
-    '''
-    
-    # List of files that tika cannot parse
-    corrupted_files = []
-    
-    # Create a PDF object for a file
-    try:
-        content = parser.from_file(file_path)
-        if 'content' in content:
-            text = content['content']
-        else:
-            corrupted_files.append(file_path)
-            return ' '
-    except UnicodeEncodeError:
-        corrupted_files.append(file_path)
-        return ' '
-    
-    # Convert to string
-    text = str(text)
-    # Escape any \ issues
-    text = str(text).replace('\n', ' ').replace('"', '\\"') 
-    # Replace the return characters with a space, thus creating one long string
-    text = ' '.join(text.split())
-        
-    return text, corrupted_files
-
-
-def sqlite_entry(path, title, content):
-    '''
-    Write a document title, document content, and the current time to 
-    an sqlite database residing in the same directory where this script is
-    '''
-
-    conn = sqlite3.connect(path)
-    c = conn.cursor()
-    # Check if a title is in the database
-    # If yes, then don't write a duplicate
-    c.execute("SELECT COUNT(*), "\
-              "SUM(CASE WHEN title=? THEN 1 ELSE 0 END) AS sum FROM document_db", 
-              [title])
-    row_count, n_records = c.fetchone()
-    if not row_count or not n_records:
-        c.execute("INSERT INTO document_db (title, content, date)"\
-                  " VALUES (?, ?, DATETIME('now'))", (title, content))
-    conn.commit()
-        
-
 def main():
     '''
     Main function of document categorization
@@ -118,17 +76,7 @@ def main():
         print("File no.%d %s is being priocessed ..." % (i, os.path.basename(fname)))
         text, corrupted_files = tika_parser(fname)
         if text:  # ignore corrupted files
-            # Extract sentences and pre-process the document content
-            sentences = parse_document(text)
-            norm_sentences = normalize_corpus(sentences)
-            # Extract top bi-grams and tri-grams and flatten both lists
-            bigrams = get_top_bigrams(norm_sentences, top_n=int(os.getenv('TOP_N')))
-            flattened_bigrams = ' '.join(' '.join(tokens) for tokens in bigrams)
-            trigrams = get_top_trigrams(norm_sentences, top_n=int(os.getenv('TOP_N')))
-            flattened_trigrams = ' '.join(' '.join(tokens) for tokens in trigrams)
-            # Combine bi-grams and tri-grams into a single list with individual 
-            # words as tokens
-            all_tokens = flattened_bigrams + " " + flattened_trigrams
+            all_tokens = preprocess_text(text)
             # Append this list as the new content describing the original document
             documents.append(all_tokens)
             # Keep only the file name without extension

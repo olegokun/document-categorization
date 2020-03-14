@@ -2,12 +2,13 @@
 """
 Created on Fri Aug 26 20:45:10 2016
 
-@author: DIP
+@author: DIP, with additions by Oleg on Sat Mar 14 13:14:50 2020
 """
 
-import re
+import re, os
 import nltk
 import string
+from keyphrase_extraction import get_top_bigrams, get_top_trigrams
 
 
 # Stopwords and some tokens mostly coming from programming code within text
@@ -120,4 +121,23 @@ def parse_document(document):
     sentences = [sentence.strip() for sentence in sentences]
     return sentences
     
+
+def preprocess_text(text):
+    '''
+    Apply a battery of text pre-processing techniques to document text
+    '''
+    
+    # Extract sentences and pre-process the document content
+    sentences = parse_document(text)
+    norm_sentences = normalize_corpus(sentences)
+    # Extract top bi-grams and tri-grams and flatten both lists
+    bigrams = get_top_bigrams(norm_sentences, top_n=int(os.getenv('TOP_N')))
+    flattened_bigrams = ' '.join(' '.join(tokens) for tokens in bigrams)
+    trigrams = get_top_trigrams(norm_sentences, top_n=int(os.getenv('TOP_N')))
+    flattened_trigrams = ' '.join(' '.join(tokens) for tokens in trigrams)
+    # Combine bi-grams and tri-grams into a single list with individual 
+    # words as tokens
+    all_tokens = flattened_bigrams + " " + flattened_trigrams
+    return all_tokens
+
     
