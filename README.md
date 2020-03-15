@@ -31,7 +31,9 @@ As an example, I used 21 e-books from my personal collection (due to the copyrig
 
 These books could roughly be divided into 3-4 clusters: "Spark", "Deep Learning", "Elasticsearch/Solr". I intentionally selected such books so that there would be no (significant) overlap in their topics and document clustering would have clear targets.
 
-## Running code
+## Training phase
+
+### Running code
 The main file with all necessary code to execute in your favorite IDE or from the command line is *document_categorization.py*. The file *categorization.env* is the environment file where all important parameters, such as clustering method or the number of topics per cluster, are set up as follows:
 
 ```
@@ -61,7 +63,7 @@ TOPIC_MODELING_PKL_FILENAME="topic_modeling_pickle_model.pkl"
 
 I used a lot of code from the great book ["Text Analytics with Python: A Practical Real-World Approach to Gaining Actionable Insights from Your Data"](https://www.apress.com/gp/book/9781484223888), written by *Dipanjan Sarkar* and published by Apress in 2016. My role was to write so called integration code linking together different parts of the processing pipeline described in the next section. Whenever the code has been adopted, I preserved the original file and function names given by Dipanjan Sarkar. I also adopted two functions related to word cloud generation from the Jupyter notebook (https://nbviewer.jupyter.org/github/LucasTurtle/national-anthems-clustering/blob/master/Cluster_Anthems.ipynb) created by *Lucas de Sá*.
 
-## Processing pipeline
+### Processing pipeline
 The application seeks for PDF files in a specified folder and extract text (as one long string) from each of them by using the tika parser. Once this is done, text is split into sentences and text pre-processing starts, which includes text filtering (removal of email addresses and web links, tokens with mixed letters and numbers, punctuation symbols, stopwords, tokens from code snippets embedded into text, and certain parts-of-speech), converting all words to the lower case, and sentence tokenization into words.
 
 I have noticed that code snippets embedded into text could harm document clustering by showing up in large numbers among top words characterizing cluster centroids. Currently, I adopted a rather straightforward solution to manually create the so called "black list" of such words that if met in text are removed from further analysis. However, this is clearly a sub-optimal solution that needs to be replaced with an automatic one (see the last section for details). 
@@ -76,7 +78,7 @@ Next feature extraction is performed where [TF-IDF](https://en.wikipedia.org/wik
 
 A TF-IDF vectorizer object, a clustering model object and topic modeling model objects (one per cluster) are saved to files in the current folder. The topic modeling model objects are stored in a list of objects.
 
-## Results
+### Results
 There are three clustering methods ([affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation), [k-means](https://en.wikipedia.org/wiki/K-means_clustering) and [Ward's hierarchical clustering](https://en.wikipedia.org/wiki/Ward%27s_method)) and two topic modeling methods ([Latent Dirichlet Allocation or LDA](https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation) and [Nonnegative Matrix Factorization or NMF](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization)).
 
 [Affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation) does not require to pre-specify the number of clusters to be found in advance, unlike [k-means](https://en.wikipedia.org/wiki/K-means_clustering). Although [Ward's hierarchical clustering](https://en.wikipedia.org/wiki/Ward%27s_method) also does not need to know that number in advance, this clustering method requires a human to judge on the final number of clusters from a dendrogram, i.e., clustering partitioning is rather subjective. Having decided on this number, a user can then supply it to [k-means](https://en.wikipedia.org/wiki/K-means_clustering). The dendrogram for my set of 21 books is shown below.
@@ -142,6 +144,17 @@ Topic #1 with weights
 ('index', 2.96), ('elasticsearch', 2.48), ('query', 2.47), ('aggregation', 1.92), ('elastic', 1.65), ('es', 1.59), ('score', 1.55), ('search', 1.55), ('level', 1.54), ('hadoop', 1.53)
 
 Both words describing centroids and topics are sufficiently well describing the essense of each cluster.
+
+## Inference phase
+Updated Cluster 2 details:
+--------------------------------------------------
+Key features: ['loss', 'accuracy', 'model', 'train', 'tensorflow', 'automl', 'tf', 'relu', 'activation', 'encoder']
+Documents in this cluster:
+Advanced Deep Learning with Keras, Advanced Deep Learning with Python, Deep Learning with TensorFlow 2 and Keras - Second Edition, Deep_Learning_for_Search, Deep_Learning_with_JavaScript, Hands-On Deep Learning for IoT, Caffe2 Quick Start Guide, Caffe2 Quick Start Guide
+======================================================================
+Cluster #2:
+Topic #1 with weights
+[('model', 2.76), ('loss', 1.9), ('layer', 1.9), ('network', 1.87), ('input', 1.85), ('neural', 1.78), ('iot', 1.78), ('caffe', 1.77), ('tf', 1.66), ('deep', 1.65)]
 
 ## Potential future improvements
 I observed that tokens from a programming code sometimes polluted clusters. This happened because many of my books contain a lot of code snippets and text pre-processing, despite being rigorous, was unable to clean up these artifacts. One potential solution of this problem could be paragraph extraction, e.g., based on some heuristics such as blank lines between paragraphs, followed by paragraph classification into code and plain text. Naturally, the latter would require a one-class or binary classifier trained on examples of code in several popular programming languages and, if a binary classifier is used, plain text. The goal is to filter out paragraphs (almost) entirely consisting of code, while leaving paragraphs with a minor fraction of code untouched as few instances of code in the whole large book would unlikely result in the high [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) score and hence, such "noisy" tokens won't do much harm to document clustering.
