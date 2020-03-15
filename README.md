@@ -147,6 +147,8 @@ Both words describing centroids and topics are sufficiently well describing the 
 
 ## Inference phase
 
+### Results
+
 #### Updated Cluster 2 details:
 
 Key features: 'loss', 'accuracy', 'model', 'train', 'tensorflow', 'automl', 'tf', 'relu', 'activation', 'encoder'
