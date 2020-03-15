@@ -148,12 +148,12 @@ Both words describing centroids and topics are sufficiently well describing the 
 ## Inference phase
 
 #### Updated Cluster 2 details:
---------------------------------------------------
+
 Key features: 'loss', 'accuracy', 'model', 'train', 'tensorflow', 'automl', 'tf', 'relu', 'activation', 'encoder'
+
 Documents in this cluster:
 Advanced Deep Learning with Keras, Advanced Deep Learning with Python, Deep Learning with TensorFlow 2 and Keras - Second Edition, Deep_Learning_for_Search, Deep_Learning_with_JavaScript, Hands-On Deep Learning for IoT, Caffe2 Quick Start Guide, Caffe2 Quick Start Guide
-======================================================================
-Cluster #2:
+
 Topic #1 with weights
 ('model', 2.76), ('loss', 1.9), ('layer', 1.9), ('network', 1.87), ('input', 1.85), ('neural', 1.78), ('iot', 1.78), ('caffe', 1.77), ('tf', 1.66), ('deep', 1.65)
 
