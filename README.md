@@ -32,6 +32,7 @@ As an example, I used 21 e-books from my personal collection (due to the copyrig
 These books could roughly be divided into 3-4 clusters: "Spark", "Deep Learning", "Elasticsearch/Solr". I intentionally selected such books so that there would be no (significant) overlap in their topics and document clustering would have clear targets.
 
 ## Training phase
+In this phase, one has a set of documents to begin working with. The outcome is a set of clusters and popular words extracted from each cluster.
 
 ### Running code
 The main file with all necessary code to execute in your favorite IDE or from the command line is *document_categorization.py*. The file *categorization.env* is the environment file where all important parameters, such as clustering method or the number of topics per cluster, are set up as follows:
@@ -146,6 +147,11 @@ Topic #1 with weights
 Both words describing centroids and topics are sufficiently well describing the essense of each cluster.
 
 ## Inference phase
+In this phase, one has clusters detected and popular words extracted from each cluster. A new (previously unseen) document or a set of such documents are presented to the inference phase pipeline with the purpose of assigning a new document or documents to existing clusters and of updating the list of popular words for clusters affected. 
+
+### Running code
+
+### Processing pipeline
 
 ### Results
 
