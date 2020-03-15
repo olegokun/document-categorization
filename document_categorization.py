@@ -173,7 +173,9 @@ if __name__ == '__main__':
         c = conn.cursor()
         c.execute('CREATE TABLE document_db'\
                   ' (title TEXT, content TEXT, date TEXT)')
+    
     main()
+    
     try:
         conn.close()
     except NameError:

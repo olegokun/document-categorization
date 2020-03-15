@@ -2,7 +2,7 @@
 """
 Created on Sat Sep 03 09:06:06 2016
 
-@author: DIP
+@author: DIP, with additions by Oleg on Sun Mar 15 11:07:53 2020
 """
 
 
@@ -113,5 +113,30 @@ def topic_extraction(documents, labels):
         
     return tm_obj
 
-        
+
+def updated_topic_extraction(corpus, tm_obj, cluster_num):
+    '''
+    Main function of topic modeling when a new document is assigned to 
+    the nearest cluster
+    '''
+
+    n_topics = int(os.getenv('TOPIC_NUMBER_PER_CLUSTER'))
+    print("Cluster #{}:".format(cluster_num))
+    norm_corpus = normalize_corpus(corpus)
+    vectorizer, tfidf_matrix = build_feature_matrix(norm_corpus, 
+                                                    feature_type='tfidf') 
+    feature_names = vectorizer.get_feature_names()
+    
+    # Update the model object
+    tm_obj.fit_transform(tfidf_matrix)
+    weights = tm_obj.components_
+      
+    topics = get_topics_terms_weights(weights, feature_names)
+    print_topics_udf(topics=topics, 
+                     total_topics=n_topics,
+                     num_terms=10,
+                     display_weights=True)
+    
+    # Return the updated model object
+    return tm_obj
         

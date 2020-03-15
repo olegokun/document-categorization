@@ -2,7 +2,7 @@
 """
 Created on Mon Sep 12 20:42:12 2016
 
-@author: DIP
+@author: DIP with additions from Oleg on Sun Mar 15 11:10:23 2020
 """
 
 import numpy as np
@@ -14,6 +14,7 @@ import random, os
 from matplotlib.font_manager import FontProperties
 from collections import Counter
 from wordcloud import WordCloud
+from database_management import get_titles_content
 
 
 # This and the next functions are adopted from
@@ -90,6 +91,38 @@ def print_cluster_data(cluster_data):
         print(', '.join(cluster_details['documents']))
         print('='*70)
 
+
+def print_updated_cluster_data(db, cl_obj, cluster_num, vectorizer, title):
+    '''
+    Print characteristics of a given cluster after a new document was assigned 
+    to it
+    '''
+    
+    print('Updated Cluster {} details:'.format(cluster_num))
+    print('-'*50)
+    # Get key features (by TFIDF score) for a given cluster
+    ordered_centroids = cl_obj.cluster_centers_.argsort()[:, ::-1]
+    feature_names = vectorizer.get_feature_names()
+    topn_features = int(os.getenv('FEATURE_NUMBER'))
+    key_features = [feature_names[index] 
+                    for index 
+                    in ordered_centroids[cluster_num, :topn_features]]
+    print('Key features:', key_features)
+    
+    # Get indices of documents belonging to a given cluster
+    indices = [i for i, label in enumerate(cl_obj.labels_) \
+               if label == cluster_num]
+    # Query the database to retrieve necessary documents
+    results = get_titles_content(db, indices)
+    # Get titles of these documents
+    titles = [result[0] for result in results]
+    titles.append(title)
+    print('Documents in this cluster:')
+    print(', '.join(titles))
+    print('='*70)
+    # Return 'results' for further analysis
+    return results
+        
 
 def plot_clusters(num_clusters, feature_matrix,
                   cluster_data, data,

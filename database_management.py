@@ -27,3 +27,19 @@ def sqlite_entry(path, title, content):
         c.execute("INSERT INTO document_db (title, content, date)"\
                   " VALUES (?, ?, DATETIME('now'))", (title, content))
     conn.commit()
+
+
+def get_titles_content(path, indices):
+    '''
+    Get titles and the content of all documents with specified indices
+    '''
+
+    conn = sqlite3.connect(path)
+    c = conn.cursor()
+    # Check if a title is in the database
+    # If yes, then don't write a duplicate
+    c.execute("SELECT title, content FROM document_db")
+    results = c.fetchall()
+    conn.commit()
+    return [(result[0], result[1]) for i, result in enumerate(results) \
+            if i in indices]
