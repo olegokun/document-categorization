@@ -146,15 +146,16 @@ Topic #1 with weights
 Both words describing centroids and topics are sufficiently well describing the essense of each cluster.
 
 ## Inference phase
+
 Updated Cluster 2 details:
 --------------------------------------------------
-Key features: ['loss', 'accuracy', 'model', 'train', 'tensorflow', 'automl', 'tf', 'relu', 'activation', 'encoder']
+Key features: 'loss', 'accuracy', 'model', 'train', 'tensorflow', 'automl', 'tf', 'relu', 'activation', 'encoder'
 Documents in this cluster:
 Advanced Deep Learning with Keras, Advanced Deep Learning with Python, Deep Learning with TensorFlow 2 and Keras - Second Edition, Deep_Learning_for_Search, Deep_Learning_with_JavaScript, Hands-On Deep Learning for IoT, Caffe2 Quick Start Guide, Caffe2 Quick Start Guide
 ======================================================================
 Cluster #2:
 Topic #1 with weights
-[('model', 2.76), ('loss', 1.9), ('layer', 1.9), ('network', 1.87), ('input', 1.85), ('neural', 1.78), ('iot', 1.78), ('caffe', 1.77), ('tf', 1.66), ('deep', 1.65)]
+('model', 2.76), ('loss', 1.9), ('layer', 1.9), ('network', 1.87), ('input', 1.85), ('neural', 1.78), ('iot', 1.78), ('caffe', 1.77), ('tf', 1.66), ('deep', 1.65)
 
 ## Potential future improvements
 I observed that tokens from a programming code sometimes polluted clusters. This happened because many of my books contain a lot of code snippets and text pre-processing, despite being rigorous, was unable to clean up these artifacts. One potential solution of this problem could be paragraph extraction, e.g., based on some heuristics such as blank lines between paragraphs, followed by paragraph classification into code and plain text. Naturally, the latter would require a one-class or binary classifier trained on examples of code in several popular programming languages and, if a binary classifier is used, plain text. The goal is to filter out paragraphs (almost) entirely consisting of code, while leaving paragraphs with a minor fraction of code untouched as few instances of code in the whole large book would unlikely result in the high [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) score and hence, such "noisy" tokens won't do much harm to document clustering.
