@@ -147,13 +147,16 @@ Topic #1 with weights
 Both words describing centroids and topics are sufficiently well describing the essense of each cluster.
 
 ## Inference phase
-In this phase, one has clusters detected and popular words extracted from each cluster. A new (previously unseen) document or a set of such documents are presented to the inference phase pipeline with the purpose of assigning a new document or documents to existing clusters and of updating the list of popular words for clusters affected. 
+In this phase, one has clusters detected and popular words extracted from each cluster. A new (previously unseen) document is  presented to the inference phase pipeline with the purpose of assigning this document to one of the existing clusters and updating the list of popular words. 
 
 ### Running code
-
+In this phase, one has to run the following command *update.py --fname=<Unseen file.pdf>* or to execute *update.py* from an IDE with the command line parameter set to *--fname=+Unseen file.pdf*. I chose "Caffe2 Quick Start Guide.pdf" to test the inference pipeline, so that the parameter is *--fname="Caffe2 Quick Start Guide.pdf"*.
+  
 ### Processing pipeline
+As before, text is extracted from an input PDF document and pre-processed, followed by feature extraction. If the text includes new words unseen in the training phase, these words are simply ignored by a vectorizer (feature extractor). Then the clustering model object retrieved from the pickle file when the application starts is used to assign a new document to one of the existing clusters, followed by this cluster's centroid update. The document title and its content in the form of flattened top bigrams and trigrams are saved to the SQLite database storing documents saved there in the training phase. Finally, the list of popular words is updated by using the topic modeling object, retrieved from another pickle file. This object is re-fit to the new corpus of documents, including only books belonging to one cluster and the object is updated. Also both clustering and topiuc modeling objects are saved in the respective files in order to reflect their changes.
 
 ### Results
+As Caffe2 is one of he Deep Learning frameworks, one can naturally expect that this book will be assigned to Cluster 2, which combines all books on this topic. As can be seen below, this indeed has happened. Though all key words remained the same, their order changed a bit. The outcome of topic modeling also indicates this change, where most topic words got their weights increased while new words entered the list of top words, replacing some "old" words, thus making Cluster 2 more Deep Learning-like.
 
 #### Updated Cluster 2 details:
 
