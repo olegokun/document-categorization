@@ -8,7 +8,7 @@ Created on Sat Mar 14 13:16:22 2020
 
 from optparse import OptionParser
 import sqlite3
-from database_management import sqlite_entry, get_titles_content
+from database_management import sqlite_entry
 import os, sys
 from tika_parser import tika_parser
 from dotenv import load_dotenv

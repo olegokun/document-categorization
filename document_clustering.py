@@ -116,7 +116,6 @@ def print_updated_cluster_data(db, cl_obj, cluster_num, vectorizer, title):
     results = get_titles_content(db, indices)
     # Get titles of these documents
     titles = [result[0] for result in results]
-    titles.append(title)
     print('Documents in this cluster:')
     print(', '.join(titles))
     print('='*70)
