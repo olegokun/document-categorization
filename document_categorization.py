@@ -28,6 +28,19 @@ def get_filenames():
     
     allPdfFiles = glob.glob(os.getenv("BOOK_PATH") + "/*.pdf")
     
+#    # Add some files manually as they are located in sub-directories
+#    extraFileNames = ["\\Better Deep Learning/better_deep_learning.pdf",
+#                     "\\Deep Learning for Computer Vision/deep_learning_for_computer_vision.pdf",
+#                     "\\Deep Learning for NLP/deep_learning_for_nlp.pdf",
+#                     "\\Deep Learning for Time Series Forecasting/deep_learning_time_series_forecasting.pdf",
+#                     "\\Deep Learning with Python/deep_learning_with_python.pdf",
+#                     "\\Introduction to Time Series Forecasting with Python/time_series_forecasting_with_python.pdf",
+#                     "\\Long Short-Term Memory Networks with Python/long_short_term_memory_networks_with_python.pdf",
+#                     "\\Generative Adversarial Networks with Python/generative_adversarial_networks.pdf",
+#                     "\\Imbalanced Classification with Python/imbalanced_classification_with_python.pdf"]
+#    # Combine two list of names
+#    allPdfFiles.extend([os.getenv("BOOK_PATH") + fileName for fileName in extraFileNames])
+    
     # For each file, extract filename while ignoring its extension 
     files = [re.split(".pdf", file)[0] for file in allPdfFiles]
     # For each extracted name, extract core name while ignoring version information such as "_v7" or "_v11_MEAP"

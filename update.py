@@ -72,7 +72,10 @@ if __name__ == '__main__':
                   dest="fname", type="str",
                   help="PDF file name.")
     (opts, args) = op.parse_args(sys.argv)
-    print(args)
+    
+    print(__doc__)
+    op.print_help()
+    
     if len(args) != 1:
         op.error("This function takes one argument.")
         sys.exit(1)
