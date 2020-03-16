@@ -159,7 +159,6 @@ As before, text is extracted from an input PDF document and pre-processed, follo
 As Caffe2 is one of he Deep Learning frameworks, one can naturally expect that this book will be assigned to Cluster 2, which combines all books on this topic. As can be seen below, this indeed has happened. Though all key words remained the same, their order changed a bit. The outcome of topic modeling also indicates this change, where most topic words got their weights increased while new words entered the list of top words, replacing some "old" words, thus making Cluster 2 more Deep Learning-like.
 
 #### Updated Cluster 2 details:
-
 Key features: 'loss', 'accuracy', 'model', 'train', 'tensorflow', 'automl', 'tf', 'relu', 'activation', 'encoder'
 
 Documents in this cluster:
